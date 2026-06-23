@@ -1,3 +1,11 @@
+"""
+Automatic differentiation utilities for higher-order derivatives.
+
+This module provides:
+- AG_grad: recursive computation of first and higher-order derivatives
+- args_requires_grad: decorator ensuring inputs require gradient tracking
+"""
+
 import torch
 from functools import wraps
 
