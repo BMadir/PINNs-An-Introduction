@@ -1,3 +1,12 @@
+"""
+Gauss-Legendre numerical quadrature utilities.
+
+This module provides:
+- 1D and 2D Gauss-Legendre quadrature rules
+- Interval scaling
+- Numerical integration
+"""
+
 import numpy as np
 import scipy
 
