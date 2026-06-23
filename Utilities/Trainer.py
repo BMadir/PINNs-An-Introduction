@@ -1,3 +1,30 @@
+""" 
+!!!! FINAL VERSION IN PROGRESS !!!!
+Training framework for PINNs.
+
+This module implements a flexible Trainer class handling:
+- supervised / PINN training loops
+- validation monitoring and best-model checkpointing
+- adaptive loss weighting strategies
+- custom optimization and scheduling
+
+Key features:
+- Automatic validation splitting and evaluation
+- Multiple weighting strategies (annealing, custom algorithms, penalty methods)
+- Support for custom optimizers and learning rate schedules
+- Checkpoint saving / loading and restart capability
+- Flexible closure-based optimization (compatible with LBFGS-style training)
+
+Also includes utilities for:
+- saving/loading training state
+- computing weighted loss combinations
+- handling error-based regularization (AL, SA, penalty methods)
+
+"""
+
+
+
+
 import torch
 import numpy as np
 import copy
@@ -10,33 +37,8 @@ __all__ = ["Trainer"]
 class Trainer:
     def __init__(self, model, validation_data, save_path, *args, **kwargs):
 
-        '''
-        self.model = model
-        self.device = model.device
-
-        self.net = model.net
-        self.net_grad = model.net_grad
-        self.net_res = model.net_res
-
-        self.l2_error = model.l2_error
-        
-        self._parameters = model.parameters
-        self.__parameters = model.parameters
-        self.__model_weights = model.weights
-        self.__zero_grad = model.zero_grad
-        '''
-
         self._set_model(model)
-
-        '''
-        for p in model.weights():
-            if p.requires_grad:
-                self.__first_weight = [p] #, model.layers[-2].weight, model.layers[-1].weight]
-                break
-        '''
-        self.__first_weight = list(model.parameters())
-        #self.__first_weight.append(p)
-        #self.kappa = self.__first_weight
+         
         self.optimizer = None
         self.lr_scheduler = None
         
@@ -75,26 +77,7 @@ class Trainer:
 
     def split_fn(self, samples):
         return samples[:self.__in_dim], samples[self.__in_dim:]
-
-    """
-    @torch.no_grad()
-    def l2_error(self, inputs, targets, dims=None):
-        if dims is not None:
-            outputs = self.net(*inputs)
-            outputs = tuple(outputs[i] for i in dims)
-            targets = tuple(targets[i] for i in dims)
-        else:
-            outputs = self.net(*inputs)
-
-        if torch.is_tensor(outputs):
-            error = torch.linalg.norm(targets - outputs, 2) / torch.linalg.norm(targets, 2)
-            return error.item()
-        else:
-            error = list(
-                ((torch.linalg.norm(targets[i] - out, 2) / torch.linalg.norm(targets[i], 2)).item() for i, out in enumerate(outputs))
-            )
-            return error
-    """
+        
     def validation_error(self, epoch):
         error = self.l2_error(self.val_in, self.val_out)
         try:
