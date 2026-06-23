@@ -1,0 +1,97 @@
+def _grad_hessian_fn(func, argnums=0):
+    grad_fn = torch.func.jacrev(func, argnums)
+    hessian_fn = torch.func.jacfwd(grad_fn, argnums)
+    return grad_fn, hessian_fn
+
+@torch.no_grad()
+def _construct_grad_hessian(grad_dict, hessian_dict):
+    grad = []
+    hessian = []
+    for p1_name, d in hessian_dict.items():
+        p1 = grad_dict[p1_name]
+        grad.append(p1.reshape(-1, 1))
+        l = []
+        numel = p1.numel()
+        for p2_name, p1_p2 in d.items():
+            l.append(p1_p2.reshape(numel, -1))
+        hessian.append(torch.cat(l, 1))
+    return torch.cat(grad), torch.cat(hessian)
+    
+    
+    
+///////////
+
+    def _parameters(self):
+        for n, p in self.named_parameters():
+            if "weight" in n:
+                yield p
+
+    def _numel(self):
+        self._numel_cache = sum(
+            2 * p.numel() if torch.is_complex(p) else p.numel()
+            for p in self._params
+        )
+        return self._numel_cache
+
+    def _add_grad(self, step_size, update):
+        offset = 0
+        for p in self._params:
+            if torch.is_complex(p):
+                p = torch.view_as_real(p)
+            numel = p.numel()
+            # view as to avoid deprecated pointwise semantics
+            p.add_(update[offset : offset + numel].view_as(p), alpha=step_size)
+            offset += numel
+        assert offset == self._numel()
+
+    @staticmethod
+    def _grad_hessian_fn(func, argnums=0):
+        grad_fn = torch.func.jacrev(func, argnums)
+        hessian_fn = torch.func.jacfwd(grad_fn, argnums)
+        return grad_fn, hessian_fn
+
+    @staticmethod
+    @torch.no_grad()
+    def _construct_grad_hessian(grad_dict, hessian_dict):
+        grad = []
+        hessian = []
+        for p1_name, d in hessian_dict.items():
+            p1 = grad_dict[p1_name]
+            grad.append(p1.flatten())
+            l = []
+            numel = p1.numel()
+            for p2_name, p1_p2 in d.items():
+                l.append(p1_p2.reshape(numel, -1))
+            hessian.append(torch.cat(l, 1))
+        return torch.cat(grad), torch.cat(hessian)
+
+    def _construct_grad(self, grad_dict):
+        grad = []
+        for p in grad_dict.values():
+            grad.append(p.flatten())
+        return torch.cat(grad)
+
+    def _clone_param(self):
+        return [p.clone(memory_format=torch.contiguous_format) for p in self._params]
+
+    def _set_param(self, params_data):
+        for p, pdata in zip(self._params, params_data):
+            p.copy_(pdata)
+        
+    def _directional_evaluate(self, closure, grad_fn, x, t, d):
+        self._add_grad(t, d)
+        params_dict = dict(zip(self.param_groups[0]['param_names'], self._params))
+        loss = float(closure(params_dict))
+        flat_grad_dict = grad_fn(params_dict)
+        flat_grad = self._construct_grad(flat_grad_dict).flatten()
+        self._set_param(x)
+        return loss, flat_grad
+
+    @torch.no_grad
+    def _gather_from_dict(self, Dict):
+        views = []
+        for p in Dict.values():
+            view = p.view(-1)
+            views.append(view)
+        return torch.cat(views, 0)
+    

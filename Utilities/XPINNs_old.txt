@@ -1,0 +1,43 @@
+from itertools import chain
+class xpinns:
+    def __init__(self, models):
+
+        m1, m2 = models
+        assert m1.device == m2.device, ('check models devices!')
+        self.device = m1.device
+        self.models = models
+
+        self.layers_dim = m1.layers_dim[:]
+        self.layers_dim[-1] = m1.layers_dim[-1] + m2.layers_dim[-1]
+        
+        self.mean_std = m1.mean_std
+
+        
+        self.net_grad = m1.net_grad
+        self.net_res = m1.net_res
+
+    def weights(self):
+        params = [model.weights() for model in self.models]
+        return chain(*params)
+        
+    def parameters(self):
+        params = [model.parameters() for model in self.models]
+        return chain(*params)
+    
+    def named_parameters(self):
+        named_params = [model.named_parameters(prefix='model.%i'%i) for i, model in enumerate(self.models)]
+        return chain(*named_params)
+
+    def state_dict(self):
+        return dict(self.named_parameters())
+        
+    def zero_grad(self):
+        for model in self.models:
+            model.zero_grad()
+            
+    def to_list(self, x):
+        return list(x) if isinstance(x, (list, tuple)) else [x]
+
+    def net(self, *args):
+        out = [self.to_list(m.net(*args)) for m in self.models]
+        return out[0] + out[1]
