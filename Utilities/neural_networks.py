@@ -1,3 +1,17 @@
+"""
+Neural network architectures.
+
+This module implements several feedforward-based models used in scientific machine learning:
+
+- feedforward: standard MLP with flexible activations and optional adaptive activation scaling
+- xfeedforward: an extanded feedforward
+- ff: Fourier-feature neural network
+- st_ff: space-time Fourier-feature network
+- mfeedforward: modified feedforward
+"""
+
+
+
 import torch
 
 __all__ = ["feedforward", "xfeedforward", "ff", "st_ff", "mfeedforward"]
@@ -214,6 +228,8 @@ class st_ff(feedforward):
             x = f(a * layer(x))
         return self.layers[-1](t * x)
 
+
+# modified Feed forw.
 class mfeedforward(feedforward):
     def __init__(self, layers_dim, activations, **kwargs):
         super().__init__(layers_dim=layers_dim, activations=activations, **kwargs)
@@ -244,103 +260,4 @@ class mfeedforward(feedforward):
             f = self._act_fns[i]
             x = f(a * layer(x))
             x = (1 - x)* U + x * V
-        return self.layers[-1](x)
-
-
-######################
-# To review
-######################
-
-# Residual network
-class ResNetBlock(torch.nn.Module):
-    
-    def __init__(self, input_size, output_size, nonlinearity='tanh', id_parameter=True, device='cpu'):
-        super().__init__()
-        
-        self.nonlinearity = getattr(torch.nn.functional, nonlinearity)
-        self.linear_1 = torch.nn.Linear(input_size, output_size)
-        self.linear_2 = torch.nn.Linear(output_size, output_size)
-        
-        if id_parameter:
-            self.id_parameter = torch.nn.Parameter(torch.randn((1, output_size), device=torch.device(device)), requires_grad=True)
-        else:
-            self.id_parameter = torch.ones((1, output_size), device=torch.device(device))
-            
-    def pad(self, x, y):
-        "pad x with zeros (unpad is also possible but not recommended), to match y size"
-        
-        n = y.shape[1] - x.shape[1]
-        pad = (int(n/2), n - int(n/2))
-        
-        return torch.nn.functional.pad(x, pad)
-
-    def forward(self, x):
-        
-        y = self.linear_2(self.nonlinearity(self.linear_1(x)))
-        
-        return y + self.id_parameter *self.pad(x, y)
-    
-
-class ResNet(torch.nn.Module):
-    def __init__(self, layers_dim, activations, device='cuda', seed=1234):
-        super().__init__()
-        
-        if device == 'cpu':
-            self.device = torch.device('cpu')
-        elif torch.cuda.is_available():
-            self.device = torch.device('cuda')
-            
-        if len(layers_dim) < 3:
-            raise Exception('len(layers_dim) < 3')
-        else:
-            self.layers_dim = layers_dim
-            
-        if isinstance(activations, list) and len(activations) == len(layers_dim) - 2:
-            self.activations = activations
-        elif isinstance(activations, str):
-            self.activations = (len(self.layers_dim) - 2)* [activations]
-        else:
-            raise Exception('problem in activations')
-        
-        self.layers = self.create_layers()
-        self.init_net(seed)
-        
-        self.to(self.device)
-        
-    def create_layers(self):
-        layers = torch.nn.ModuleList()
-        dim = self.layers_dim[0]
-        for hdim in self.layers_dim[1 :]:
-            layers.append(ResNetBlock(dim, hdim, device=self.device))
-            dim = hdim
-        return layers
-    
-    def init_net(self, seed):
-        torch.manual_seed(seed)
-        for p in self.parameters():
-            try:
-                torch.nn.init.xavier_uniform_(p)
-            except:
-                torch.nn.init.constant_(p, 0)
-
-    def weights(self):
-        for n, p in self.named_parameters():
-            if "weight" in n:
-                yield p
-
-    def bias(self):
-        for n, p in self.named_parameters():
-            if "bias" in n:
-                yield p
-
-    def _numel(self):
-        self.numel = sum(
-            2 * p.numel() if torch.is_complex(p) else p.numel() for p in self.parameters()
-        )
-        return self.numel
-    
-    def forward(self, x):
-        for i, layer in enumerate(self.layers[: -1]):
-            f = getattr(torch.nn.functional, self.activations[i])
-            x = f(layer(x))
         return self.layers[-1](x)
