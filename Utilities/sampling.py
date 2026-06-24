@@ -4,14 +4,6 @@ Sampling and adaptive Sampling for PINNs
 This module provides:
 - Sampler: Latin hypercube / Sobol / Halton / Hammersley sampling in bounded domains
 - Join_samplers: combination of multiple sampling strategies with weighted proportions
-- Adaptor: residual-based adaptive refinement (RAR) and density-based sampling (RAD)
-- Data_sampler: sampling from fixed datasets with optional importance weighting
-
-Key features:
-- Supports NumPy and PyTorch outputs
-- Adaptive sampling based on model residuals
-- Integration with PINNs and PDE training pipelines
-- Flexible composition of multiple sampling strategies
 """
 
 
@@ -22,35 +14,7 @@ import copy
 
 from utils import  torch_out
 
-__all__ = ["Sampler", "Join_samplers", "Adaptor", "Data_sampler"]
-
-
-### Helper functions:
-def _rar_fn(sample_fn, func, num_in, num_out, **kwargs):
-    """ Residual-based adaptive refinement """
-    *sample, output = sample_fn(num_in, **kwargs)
-    abs_value = func(*sample).abs()
-    with torch.no_grad():
-        values, indices = torch.topk(abs_value, num_out, dim=0)
-        indices = indices.flatten()
-        return *[s[indices] for s in sample], output[indices]
-
-
-def _rad_fn(sample_fn, func, num_in, num_out, k, c, seed=1234, **kwargs):
-    # generator = torch.Generator("cuda").manual_seed(seed)
-    try:
-        generator = kwargs.pop("generator")
-    except:
-        generator = None
-
-    *sample, output = sample_fn(num_in, **kwargs)
-    abs_value = func(*sample).abs().flatten()
-    with torch.no_grad():
-        density = (abs_value ** k) / (abs_value ** k).mean() + c
-        density /= density.sum()
-        indices = torch.multinomial(density, num_out, generator=generator)
-        indices = indices.flatten()
-        return *[s[indices] for s in sample], output[indices]
+__all__ = ["Sampler", "Join_samplers"]
 
 
 ### Sampler class
@@ -139,70 +103,3 @@ class Join_samplers:
                 else:
                     samples[i] = np.vstack([samples[i], s])
         return tuple(samples)
-
-### Adapt a sample function
-class Adaptor:
-    def __init__(self, method, sample_fn, func, num_in=None, seed=1234, **adaptor_kwargs):
-        sample_kwargs = copy.deepcopy(adaptor_kwargs)
-        if method.lower() == "rad":
-            self._k = sample_kwargs.pop("k")
-            self._c = sample_kwargs.pop("c")
-        elif method.lower() == "rar":
-            pass
-        else:
-            raise NotImplementedError(f"method {method} is not implemented")
-        self._kwargs = sample_kwargs
-
-        self.method = method
-        self.sample_fn = sample_fn
-        self.func = func
-        self.num_in = num_in
-
-
-        self.state_dict = None
-        self.seed = seed
-
-    def _rar_fn(self, num_out):
-        return _rar_fn(self.sample_fn, self.func, self.num_in, num_out, **self._kwargs)
-    
-    def _rad_fn(self, num_out):
-        return _rad_fn(self.sample_fn, self.func, self.num_in, num_out, k=self._k, c=self._c, seed=self.seed, **self._kwargs)
-
-    def sample(self, n):
-        if self.method.lower() == "rar":
-            return self._rar_fn(num_out=n)
-        elif self.method.lower() == "rad":
-            return self._rad_fn(num_out=n)
-
-### Sample from data
-class Data_sampler:
-    def __init__(self, data, adapt=False, out_dims=[-1], k=2, c=1, device="cpu"):
-        n, m = data.shape
-        data = np.hsplit(data, m)
-        output = np.sqrt(sum(np.square(data[i]) for i in out_dims)).flatten()
-        if adapt:
-            abs_value = np.abs(output)
-            density = (abs_value ** k) / (abs_value ** k).mean() + c
-            density /= density.sum()
-        else:
-            density = (1 / n) * np.ones(n)
-        self.data = data
-        self.density = torch.Tensor(density)
-        self.device = device
-        self.n = n
-
-    @staticmethod
-    def _Array_to_Tensor(list_A, device):
-        list_T = []
-        for a in list_A:
-            t = torch.Tensor(a).to(device)
-            list_T.append(t)
-        return tuple(list_T)
-
-    def sample(self, n, device=None, **kwargs):
-        if device is None:
-            device = self.device
-        sample = self._Array_to_Tensor(self.data, device)
-        n = min(n, self.n)
-        idx = torch.multinomial(self.density, n)
-        return tuple(s[idx] for s in sample)
