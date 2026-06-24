@@ -32,6 +32,7 @@ Raissi, M., Perdikaris, P., & Karniadakis, G. E. (2019).
 *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.*
 Journal of Computational Physics, 378, 686–707.
 
+<!--
 ```bibtex
 @article{raissi2019physics,
   title={Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations},
@@ -42,6 +43,7 @@ Journal of Computational Physics, 378, 686–707.
   year={2019}
 }
 ```
+-->
 
 ### hp-VPINNs
 
@@ -49,6 +51,7 @@ Kharazmi, E., Zhang, Z., & Karniadakis, G. E. (2021).
 *hp-VPINNs: Variational physics-informed neural networks with domain decomposition.*
 Computer Methods in Applied Mechanics and Engineering, 374, 113547.
 
+<!--
 ```bibtex
 @article{kharazmi2021hpvpinns,
   title={hp-VPINNs: Variational physics-informed neural networks with domain decomposition},
@@ -59,6 +62,7 @@ Computer Methods in Applied Mechanics and Engineering, 374, 113547.
   year={2021}
 }
 ```
+-->
 
 ### Deep Ritz Method
 
@@ -66,6 +70,7 @@ E, W., & Yu, B. (2018).
 *The Deep Ritz Method: A deep learning-based numerical algorithm for solving variational problems.*
 Communications in Mathematics and Statistics, 6, 1–12.
 
+<!--
 ```bibtex
 @article{e2018deepritz,
   title={The Deep Ritz Method: A deep learning-based numerical algorithm for solving variational problems},
@@ -77,6 +82,7 @@ Communications in Mathematics and Statistics, 6, 1–12.
   year={2018}
 }
 ```
+-->
 
 ---
 
@@ -84,9 +90,14 @@ Communications in Mathematics and Statistics, 6, 1–12.
 
 ```text
 .
-├── Classical_PINNs/
-├── hp_VPINNs/
-├── Deep_Ritz/
-└── README.md
+├── PINNs_Classical.ipynb
+├── PINNs_Galerkin.ipynb
+├── PINNs_Ritz.ipynb
+└── Utilities
+    ├── AutoDiff.py
+    ├── quadrature.py
+    └── sampling.py
+    
 ```
+
 
