@@ -49,20 +49,20 @@ The repository provides implementations, notebooks, and examples illustrating th
 
 ## References
 
-### Classical PINNs
+* Classical PINNs
 
 Raissi, M., Perdikaris, P., & Karniadakis, G. E. (2019).
 *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.*
 Journal of Computational Physics, 378, 686–707.
 
-### hp-VPINNs
+* hp-VPINNs
 
 Kharazmi, E., Zhang, Z., & Karniadakis, G. E. (2021).
 *hp-VPINNs: Variational physics-informed neural networks with domain decomposition.*
 Computer Methods in Applied Mechanics and Engineering, 374, 113547.
 
 
-### Deep Ritz Method
+* Deep Ritz Method
 
 E, W., & Yu, B. (2018).
 *The Deep Ritz Method: A deep learning-based numerical algorithm for solving variational problems.*
