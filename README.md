@@ -15,6 +15,7 @@ $$
 $$
 
 subject to homogeneous Dirichlet boundary conditions
+
 $$
 u = 0 \qquad \text{on } \partial\Omega.
 $$
