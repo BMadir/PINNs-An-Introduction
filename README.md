@@ -10,15 +10,14 @@ Implemented methods include:
 
 These methods are applied to solve the two-dimensional Poisson problem
 
-[
+$$
 -\nabla^2 u = f \qquad \text{in } \Omega = (0,1)^2,
-]
+$$
 
 subject to homogeneous Dirichlet boundary conditions
-
-[
+$$
 u = 0 \qquad \text{on } \partial\Omega.
-]
+$$
 
 The repository provides implementations, notebooks, and examples illustrating the formulation, training, and comparison of these physics-informed approaches.
 
