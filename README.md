@@ -1,5 +1,5 @@
 # Physics-Informed Neural Networks (PINNs): An Introduction
-=====
+===
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.6.0-red)
