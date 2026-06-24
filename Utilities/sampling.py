@@ -1,5 +1,5 @@
 """
-Sampling and adaptive Sampling for PINNs
+Sampling for PINNs
 
 This module provides:
 - Sampler: Latin hypercube / Sobol / Halton / Hammersley sampling in bounded domains
