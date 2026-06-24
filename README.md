@@ -22,6 +22,24 @@ $$
 
 The repository provides implementations, notebooks, and examples illustrating the formulation, training, and comparison of these physics-informed approaches.
 
+
+---
+
+## Repository Structure
+
+```text
+.
+├── PINNs_Classical.ipynb
+├── PINNs_Galerkin.ipynb
+├── PINNs_Ritz.ipynb
+└── Utilities
+    ├── AutoDiff.py
+    ├── quadrature.py
+    └── sampling.py
+    
+```
+
+---
 ---
 
 ## References
@@ -83,21 +101,4 @@ Communications in Mathematics and Statistics, 6, 1–12.
 }
 ```
 -->
-
----
-
-## Repository Structure
-
-```text
-.
-├── PINNs_Classical.ipynb
-├── PINNs_Galerkin.ipynb
-├── PINNs_Ritz.ipynb
-└── Utilities
-    ├── AutoDiff.py
-    ├── quadrature.py
-    └── sampling.py
-    
-```
-
 
