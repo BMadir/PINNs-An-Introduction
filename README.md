@@ -1,4 +1,5 @@
 # Physics-Informed Neural Networks (PINNs): An Introduction
+
 ===
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
@@ -45,7 +46,7 @@ The repository provides implementations, notebooks, and examples illustrating th
     
 ```
 
----
+
 ---
 
 ## References
