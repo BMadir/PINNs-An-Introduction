@@ -27,6 +27,6 @@ $$
 u = 0 \qquad \text{on } \partial\Omega.
 $$
 
-The repository provides implementations, notebooks, and examples illustrating the formulation, training, and comparison of these physics-informed approaches.
+Don't hesitate to contribute !
 
 
