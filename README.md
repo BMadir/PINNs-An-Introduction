@@ -11,9 +11,9 @@ Implemented methods include:
 
 | Notebook | Referance Method |
 |----------|----------|
-| ``` PINNs_Classical.ipynb ``` | [1](https://www.sciencedirect.com/science/article/pii/S0021999118307125?casa_token=qzMbq7Wr9jEAAAAA:MRoYMppatcGHNw72Y_LutAbEYzhwcwSGnJzPZV94thoPg0nYZwt56UfNHyWmngIpYcyBwoYkiQ98)  |
-| ``` PINNs_Galerkin.ipynb ``` | [2](https://www.sciencedirect.com/science/article/pii/S0045782520307325?casa_token=-MZ-e3sE-u4AAAAA:yGfrbrNHuOkp62Xzk8zeU4LOSo2XyoZRlpE0r7R7XHGb_ssbupr1Ob10fciODemuT-RsrpQ3s4pf)  |
-| ``` PINNs_Ritz.ipynb ``` | [3](https://link.springer.com/article/10.1007/s40304-018-0127-z) |
+| ``` PINNs_Classical.ipynb ``` | [[1]](https://www.sciencedirect.com/science/article/pii/S0021999118307125?casa_token=qzMbq7Wr9jEAAAAA:MRoYMppatcGHNw72Y_LutAbEYzhwcwSGnJzPZV94thoPg0nYZwt56UfNHyWmngIpYcyBwoYkiQ98)  |
+| ``` PINNs_Galerkin.ipynb ``` | [[2]](https://www.sciencedirect.com/science/article/pii/S0045782520307325?casa_token=-MZ-e3sE-u4AAAAA:yGfrbrNHuOkp62Xzk8zeU4LOSo2XyoZRlpE0r7R7XHGb_ssbupr1Ob10fciODemuT-RsrpQ3s4pf)  |
+| ``` PINNs_Ritz.ipynb ``` | [[3]](https://link.springer.com/article/10.1007/s40304-018-0127-z) |
 
 * Classical PINNs
 * hp-VPINNs (Variational Physics-Informed Neural Networks)
