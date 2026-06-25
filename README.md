@@ -1,14 +1,14 @@
-# Physics-Informed Neural Networks (PINNs): An Introduction
+# Physics-Informed Neural Networks: An Introduction
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.6.0-red)
 ![CUDA](https://img.shields.io/badge/CUDA-12.4-green)
 
 
-This repository contains several implementations of Physics-Informed Neural Networks (PINNs) using PyTorch for the numerical solution of partial differential equations (PDEs).
+This repository contains several implementations of Physics-Informed Neural Networks (PINNs) using PyTorch.
 
 Implemented methods include:
-
+|A|B|
 * Classical PINNs
 * hp-VPINNs (Variational Physics-Informed Neural Networks)
 * Deep Ritz Method
