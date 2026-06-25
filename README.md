@@ -9,12 +9,10 @@ This repository contains several implementations of Physics-Informed Neural Netw
 
 Implemented methods include:
 
-|| A | B |
-
 | Column 1 | Column 2 | Column 3 |
 |----------|----------|----------|
-| Value A  | Value B  | Value C  |
-| Value D  | Value E  | Value F  |
+| ``` PINNs_Classical.ipynb ```  | Value B  | Value C  |
+| ``` PINNs_Classical.ipynb ```  | Value E  | Value F  |
 
 * Classical PINNs
 * hp-VPINNs (Variational Physics-Informed Neural Networks)
