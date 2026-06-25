@@ -8,7 +8,9 @@
 This repository contains several implementations of Physics-Informed Neural Networks (PINNs) using PyTorch.
 
 Implemented methods include:
-|A|B|
+
+|| A | B |
+
 * Classical PINNs
 * hp-VPINNs (Variational Physics-Informed Neural Networks)
 * Deep Ritz Method
