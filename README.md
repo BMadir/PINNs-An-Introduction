@@ -11,6 +11,11 @@ Implemented methods include:
 
 || A | B |
 
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Value A  | Value B  | Value C  |
+| Value D  | Value E  | Value F  |
+
 * Classical PINNs
 * hp-VPINNs (Variational Physics-Informed Neural Networks)
 * Deep Ritz Method
